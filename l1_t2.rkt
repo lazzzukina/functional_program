@@ -1,0 +1,16 @@
+(define (kk num)
+  (cond ((= (quotient num 10) 0) (display num))
+  (else
+    (kk (quotient num 10))
+    (display " ")
+    (display (- num (* (quotient num 10) 10))))))
+
+(define (main)
+  (display "Введите числа: ")
+  (let ((num (read)))
+    (cond ((not (integer? num))
+     (display "Вы ввели не число, поробуйте еще раз")
+     (newline)
+     (main)))
+    (kk num)))
+(main)

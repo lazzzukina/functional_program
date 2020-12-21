@@ -1,0 +1,46 @@
+
+(define (sum f term? start stop step)
+   (if (term? start stop) 0
+       (+ (f start step) (sum f term? (+ start step) stop step))))
+
+(define (integral-simpson f start stop step)
+  (define (calc-for-interval f x step)
+    (* (/ step 5) (+ (f x) (* 4 (f (+ x (/ step 2)))) (f (+ x step)))))
+  (sum (lambda (start step) (calc-for-interval f start step))
+       (lambda (start stop) (> start stop))
+       start stop step))
+
+(define (integral-left-rectangles f start stop step)
+  (sum (lambda (x step) (* step (f x)))
+       (lambda (start stop) (>= start stop))
+       start stop step))
+
+(define (integral-right-rectangles f start stop step)
+  (sum (lambda (x step) (* step (f x)))
+       (lambda (start stop) (> start stop))
+       (+ start step) stop step))
+
+(define (integral-middle-rectangles f start stop step)
+  (sum (lambda (x step) (* step (f (+ x (/ step 2)))))
+       (lambda (start stop) (> start stop))
+       start stop step))
+
+(define (fu)
+  (let ((target-func (lambda (x) (/ (* x x) (sqrt (+ 1 (* x x))))))
+        (start -0.5)
+        (stop 1.3)
+        (step 0.0001))
+    (display "метод Симпсона: ")
+    (display (integral-simpson target-func start stop step))
+    (newline)
+    (display "Метод левого прямоугольника: ")
+    (display (integral-left-rectangles target-func start stop step))
+    (newline)
+    (display "Метод правого прямоугольника: ")
+    (display (integral-right-rectangles target-func start stop step))
+    (newline)
+    (display "Метод средних прямоугольников: ")
+    (display (integral-middle-rectangles target-func start stop step))
+    (newline)))
+
+(fu)
